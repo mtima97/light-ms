@@ -1,1 +1,18 @@
+#file: noinspection SpellCheckingInspection
 version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    container_name: databases
+    ports:
+      - "${CUSTOM_DB_PORT}:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
