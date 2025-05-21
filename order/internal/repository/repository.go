@@ -35,7 +35,7 @@ func (d Db) Close() {
 }
 
 func getDsn(conf config.Config) string {
-	f := "postgres://%s:%s@%s:%s/postgres"
+	f := "postgres://%s:%s@%s:%s/%s"
 
-	return fmt.Sprintf(f, conf.DbUser, conf.DbPassword, conf.DbHost, conf.DbPort)
+	return fmt.Sprintf(f, conf.DbUser, conf.DbPassword, conf.DbHost, conf.DbPort, conf.DbName)
 }
