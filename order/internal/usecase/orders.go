@@ -24,8 +24,17 @@ func (u OrdersUcase) CreateOrder(ctx context.Context, dto usecase.CreateOrderDto
 	}
 
 	if err := u.repo.CreateOrder(ctx, order); err != nil {
-		return fmt.Errorf("create order in db: %v", err)
+		return fmt.Errorf("db: %v", err)
 	}
 
 	return nil
+}
+
+func (u OrdersUcase) GetById(ctx context.Context, id int32) (entities.Order, error) {
+	order, err := u.repo.GetById(ctx, pgtype.Int4{Int32: id, Valid: true})
+	if err != nil {
+		return order, fmt.Errorf("db: %v", err)
+	}
+
+	return order, nil
 }

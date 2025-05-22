@@ -10,4 +10,5 @@ func RegisterRoutes(r *gin.Engine, ordersUcase usecase.OrdersUcase) {
 	ordersH := handlers.NewOrdersHandler(ordersUcase)
 
 	r.POST("/orders", ordersH.CreateOrder)
+	r.GET("/orders/:id", ordersH.GetById)
 }

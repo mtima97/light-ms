@@ -6,6 +6,7 @@ import (
 	umodels "light-ms/order/internal/models/usecase"
 	"light-ms/order/internal/usecase"
 	"net/http"
+	"strconv"
 )
 
 type OrdersHandler struct {
@@ -36,4 +37,20 @@ func (h OrdersHandler) CreateOrder(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusCreated, h.successResponse(nil, http.StatusText(http.StatusCreated)))
+}
+
+func (h OrdersHandler) GetById(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, h.errorResponse(err.Error()))
+		return
+	}
+
+	order, err := h.ucase.GetById(ctx, int32(id))
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, h.errorResponse(err.Error()))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, h.successResponse(order, http.StatusText(http.StatusOK)))
 }
