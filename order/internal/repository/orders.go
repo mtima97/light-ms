@@ -37,3 +37,14 @@ func (d Db) GetById(ctx context.Context, id pgtype.Int4) (entities.Order, error)
 
 	return order, nil
 }
+
+func (d Db) UpdateStatus(ctx context.Context, id pgtype.Int4, status pgtype.Text) error {
+	sql := "update orders.orders set status = $1 where id = $2;"
+
+	_, err := d.pool.Exec(ctx, sql, status, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

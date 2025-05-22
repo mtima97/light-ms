@@ -54,3 +54,24 @@ func (h OrdersHandler) GetById(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, h.successResponse(order, http.StatusText(http.StatusOK)))
 }
+
+func (h OrdersHandler) UpdateStatus(ctx *gin.Context) {
+	var req requests.UpdateStatusRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, h.errorResponse(err.Error()))
+		return
+	}
+
+	dto := umodels.UpdateStatusDto{
+		OrderId: req.OrderId,
+		Status:  req.Status,
+	}
+
+	if err := h.ucase.UpdateStatus(ctx, dto); err != nil {
+		ctx.JSON(http.StatusInternalServerError, h.errorResponse(err.Error()))
+		return
+	}
+
+	ctx.JSON(http.StatusOK, h.successResponse(nil, http.StatusText(http.StatusOK)))
+}

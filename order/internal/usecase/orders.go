@@ -38,3 +38,14 @@ func (u OrdersUcase) GetById(ctx context.Context, id int32) (entities.Order, err
 
 	return order, nil
 }
+
+func (u OrdersUcase) UpdateStatus(ctx context.Context, dto usecase.UpdateStatusDto) error {
+	id := pgtype.Int4{Int32: dto.OrderId, Valid: true}
+	status := pgtype.Text{String: dto.Status, Valid: true}
+
+	if err := u.repo.UpdateStatus(ctx, id, status); err != nil {
+		return fmt.Errorf("db: %v", err)
+	}
+
+	return nil
+}

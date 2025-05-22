@@ -11,4 +11,5 @@ func RegisterRoutes(r *gin.Engine, ordersUcase usecase.OrdersUcase) {
 
 	r.POST("/orders", ordersH.CreateOrder)
 	r.GET("/orders/:id", ordersH.GetById)
+	r.PATCH("/orders/:id/status", ordersH.UpdateStatus)
 }
