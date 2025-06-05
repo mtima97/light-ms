@@ -1,11 +1,11 @@
 package requests
 
 type CreateOrderRequest struct {
-	UserId int32 `json:"user_id"`
-	Amount int64 `json:"amount"`
+	UserId int32 `json:"user_id" binding:"required,gte=1"`
+	Amount int64 `json:"amount" binding:"required,gte=1"`
 }
 
 type UpdateStatusRequest struct {
-	OrderId int32  `json:"order_id"`
-	Status  string `json:"status"`
+	OrderId int32  `json:"order_id" binding:"required,gte=1"`
+	Status  string `json:"status" binding:"required"`
 }

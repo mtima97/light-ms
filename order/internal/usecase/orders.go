@@ -6,14 +6,19 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 	"light-ms/order/internal/models/entities"
 	"light-ms/order/internal/models/usecase"
-	"light-ms/order/internal/repository"
 )
 
-type OrdersUcase struct {
-	repo repository.Db
+type OrdersRepository interface {
+	CreateOrder(ctx context.Context, order entities.Order) error
+	GetById(ctx context.Context, id pgtype.Int4) (entities.Order, error)
+	UpdateStatus(ctx context.Context, id pgtype.Int4, status pgtype.Text) error
 }
 
-func NewOrdersUcase(repo repository.Db) OrdersUcase {
+type OrdersUcase struct {
+	repo OrdersRepository
+}
+
+func NewOrdersUcase(repo OrdersRepository) OrdersUcase {
 	return OrdersUcase{repo: repo}
 }
 
