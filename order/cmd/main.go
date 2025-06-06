@@ -7,6 +7,7 @@ import (
 	"light-ms/order/internal/repository"
 	"light-ms/order/internal/routes"
 	"light-ms/order/internal/usecase"
+	cmnconf "light-ms/pkg/common/config"
 	"log"
 )
 
@@ -15,7 +16,7 @@ func main() {
 
 	conf := config.LoadConf()
 
-	db := repository.NewDbConn(ctx, conf)
+	db := repository.NewOrderRepository(ctx, dsn(conf))
 	defer db.Close()
 
 	r := setupRouter(usecase.NewOrdersUcase(db))
@@ -39,4 +40,14 @@ func setupRouter(ordersUcase usecase.OrdersUcase) *gin.Engine {
 	routes.RegisterRoutes(r, ordersUcase)
 
 	return r
+}
+
+func dsn(c config.Config) cmnconf.Dsn {
+	return cmnconf.Dsn{
+		Host:     c.DbHost,
+		Port:     c.DbPort,
+		User:     c.DbUser,
+		Password: c.DbPassword,
+		Database: c.DbName,
+	}
 }

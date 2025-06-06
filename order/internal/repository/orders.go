@@ -4,12 +4,28 @@ import (
 	"context"
 	"github.com/jackc/pgx/v5/pgtype"
 	"light-ms/order/internal/models/entities"
+	cmnconf "light-ms/pkg/common/config"
+	"light-ms/pkg/common/db"
+	"log"
 )
 
-func (d Db) CreateOrder(ctx context.Context, order entities.Order) error {
+type OrderRepo struct {
+	conn db.Conn
+}
+
+func NewOrderRepository(ctx context.Context, cfg cmnconf.Dsn) OrderRepo {
+	conn, err := db.NewConn(ctx, cfg)
+	if err != nil {
+		log.Fatalf("db: %v", err)
+	}
+
+	return OrderRepo{conn: conn}
+}
+
+func (r OrderRepo) CreateOrder(ctx context.Context, order entities.Order) error {
 	sql := "insert into orders.orders (user_id, amount) values ($1, $2);"
 
-	_, err := d.pool.Exec(ctx, sql, order.UserId, order.Amount)
+	_, err := r.conn.Exec(ctx, sql, order.UserId, order.Amount)
 	if err != nil {
 		return err
 	}
@@ -17,34 +33,28 @@ func (d Db) CreateOrder(ctx context.Context, order entities.Order) error {
 	return nil
 }
 
-func (d Db) GetById(ctx context.Context, id pgtype.Int4) (entities.Order, error) {
-	var order entities.Order
-
+func (r OrderRepo) GetById(ctx context.Context, id pgtype.Int4) (entities.Order, error) {
 	sql := "select id, user_id, amount, status, created_at, updated_at from orders.orders where id = $1;"
 
-	row := d.pool.QueryRow(ctx, sql, id)
-
-	if err := row.Scan(
-		&order.Id,
-		&order.UserId,
-		&order.Amount,
-		&order.Status,
-		&order.CreatedAt,
-		&order.UpdatedAt,
-	); err != nil {
-		return order, err
+	order, err := db.QueryOne[entities.Order](ctx, r.conn, sql, id)
+	if err != nil {
+		return entities.Order{}, err
 	}
 
 	return order, nil
 }
 
-func (d Db) UpdateStatus(ctx context.Context, id pgtype.Int4, status pgtype.Text) error {
+func (r OrderRepo) UpdateStatus(ctx context.Context, id pgtype.Int4, status pgtype.Text) error {
 	sql := "update orders.orders set status = $1 where id = $2;"
 
-	_, err := d.pool.Exec(ctx, sql, status, id)
+	_, err := r.conn.Exec(ctx, sql, status, id)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func (r OrderRepo) Close() {
+	r.conn.Close()
 }
