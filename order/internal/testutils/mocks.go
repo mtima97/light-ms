@@ -17,6 +17,10 @@ func (m MockOrdersRepository) GetById(ctx context.Context, id pgtype.Int4) (enti
 	return entities.Order{}, nil
 }
 
+func (m MockOrdersRepository) Get(ctx context.Context) ([]entities.Order, error) {
+	return []entities.Order{}, nil
+}
+
 func (m MockOrdersRepository) UpdateStatus(ctx context.Context, id pgtype.Int4, status pgtype.Text) error {
 	return nil
 }
