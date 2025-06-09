@@ -1,20 +1,20 @@
 package handlers
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	"github.com/gin-gonic/gin"
+)
 
-type BaseHandler struct {
-	//
-}
-
-func (h BaseHandler) errorResponse(message string) gin.H {
+func errorResponse(err error) gin.H {
 	return gin.H{
-		"error": message,
+		"message": fmt.Sprintf("error: %v", err),
+		"data":    nil,
 	}
 }
 
-func (h BaseHandler) successResponse(data any, message string) gin.H {
+func successResponse(data any, message string) gin.H {
 	return gin.H{
-		"data":    data,
 		"message": message,
+		"data":    data,
 	}
 }

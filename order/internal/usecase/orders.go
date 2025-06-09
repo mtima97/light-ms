@@ -11,6 +11,7 @@ import (
 type OrdersRepository interface {
 	CreateOrder(ctx context.Context, order entities.Order) error
 	GetById(ctx context.Context, id pgtype.Int4) (entities.Order, error)
+	Get(ctx context.Context) ([]entities.Order, error)
 	UpdateStatus(ctx context.Context, id pgtype.Int4, status pgtype.Text) error
 }
 
@@ -42,6 +43,15 @@ func (u OrdersUcase) GetById(ctx context.Context, id int32) (entities.Order, err
 	}
 
 	return order, nil
+}
+
+func (u OrdersUcase) Get(ctx context.Context) ([]entities.Order, error) {
+	orders, err := u.repo.Get(ctx)
+	if err != nil {
+		return nil, fmt.Errorf("db: %v", err)
+	}
+
+	return orders, nil
 }
 
 func (u OrdersUcase) UpdateStatus(ctx context.Context, dto usecase.UpdateStatusDto) error {

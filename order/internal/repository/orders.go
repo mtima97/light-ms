@@ -44,6 +44,17 @@ func (r OrderRepo) GetById(ctx context.Context, id pgtype.Int4) (entities.Order,
 	return order, nil
 }
 
+func (r OrderRepo) Get(ctx context.Context) ([]entities.Order, error) {
+	sql := `select * from orders.orders;`
+
+	orders, err := db.QueryAll[entities.Order](ctx, r.conn, sql)
+	if err != nil {
+		return nil, err
+	}
+
+	return orders, nil
+}
+
 func (r OrderRepo) UpdateStatus(ctx context.Context, id pgtype.Int4, status pgtype.Text) error {
 	sql := "update orders.orders set status = $1 where id = $2;"
 

@@ -58,6 +58,16 @@ func QueryOne[T any](ctx context.Context, cn Conn, q string, args ...any) (T, er
 	return resp, nil
 }
 
+func QueryAll[T any](ctx context.Context, cn Conn, q string) ([]T, error) {
+	var resp []T
+
+	if err := pgxscan.Select(ctx, cn, &resp, q); err != nil {
+		return resp, err
+	}
+
+	return resp, nil
+}
+
 func dsnToStr(c config.Dsn) string {
 	return fmt.Sprintf(dsnFormat, c.User, c.Password, c.Host, c.Port, c.Database)
 }
