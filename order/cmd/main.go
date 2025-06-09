@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	_ "light-ms/order/docs"
 	"light-ms/order/internal/config"
 	"light-ms/order/internal/repository"
 	"light-ms/order/internal/routes"
@@ -11,6 +12,10 @@ import (
 	"log"
 )
 
+// @title Мой АПИ
+// @version 1.0
+// @host http://localhost:9001
+// @BasePath /
 func main() {
 	ctx := context.Background()
 
