@@ -6,9 +6,9 @@ services:
     image: postgres:15
     container_name: databases
     ports:
-      - "${CUSTOM_DB_PORT}:5432"
+      - "${DB_PORT}:5432"
     environment:
-      POSTGRES_DB: postgres
+      POSTGRES_DB: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:

@@ -1,7 +1,6 @@
 package requests
 
 type CreateOrderRequest struct {
-	UserId int32 `json:"user_id" binding:"required,gte=1"`
 	Amount int64 `json:"amount" binding:"required,gte=1"`
 }
 

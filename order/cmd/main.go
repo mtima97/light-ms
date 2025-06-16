@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	_ "light-ms/order/docs"
 	"light-ms/order/internal/config"
 	"light-ms/order/internal/repository"
@@ -18,33 +17,17 @@ import (
 // @BasePath /
 func main() {
 	ctx := context.Background()
+	cfg := config.LoadConf()
 
-	conf := config.LoadConf()
-
-	db := repository.NewOrderRepository(ctx, dsn(conf))
+	db := repository.NewOrderRepository(ctx, dsn(cfg))
 	defer db.Close()
 
-	r := setupRouter(usecase.NewOrdersUcase(db))
+	router := routes.NewRouter(cfg)
+	router.Register(usecase.NewOrdersUcase(db))
 
-	if err := r.SetTrustedProxies(conf.TrustedProxies); err != nil {
+	if err := router.Run(); err != nil {
 		log.Fatal(err)
 	}
-
-	log.Printf("server started on port %s", conf.ServerPort)
-
-	if err := r.Run(conf.ServerPort); err != nil {
-		log.Fatal(err)
-	}
-}
-
-func setupRouter(ordersUcase usecase.OrdersUcase) *gin.Engine {
-	gin.SetMode(gin.ReleaseMode)
-
-	r := gin.Default()
-
-	routes.RegisterRoutes(r, ordersUcase)
-
-	return r
 }
 
 func dsn(c config.Config) cmnconf.Dsn {

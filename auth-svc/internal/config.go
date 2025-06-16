@@ -1,8 +1,6 @@
-package config
+package internal
 
-import (
-	"light-ms/pkg/common/config"
-)
+import "light-ms/pkg/common/config"
 
 type Config struct {
 	config.Svc
@@ -12,7 +10,7 @@ type Config struct {
 func LoadConf() Config {
 	conf := Config{}
 
-	config.Load(&conf, "order/.env")
+	config.Load(&conf, "auth-svc/.env")
 
 	return conf
 }

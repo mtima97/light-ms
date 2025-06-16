@@ -7,6 +7,7 @@ import (
 	cmnconf "light-ms/pkg/common/config"
 	"light-ms/pkg/common/db"
 	"log"
+	"time"
 )
 
 type OrderRepo struct {
@@ -56,9 +57,11 @@ func (r OrderRepo) Get(ctx context.Context) ([]entities.Order, error) {
 }
 
 func (r OrderRepo) UpdateStatus(ctx context.Context, id pgtype.Int4, status pgtype.Text) error {
-	sql := "update orders.orders set status = $1 where id = $2;"
+	sql := "update orders.orders set status = $1, updated_at = $2 where id = $3;"
 
-	_, err := r.conn.Exec(ctx, sql, status, id)
+	updatedAt := pgtype.Timestamp{Time: time.Now(), Valid: true}
+
+	_, err := r.conn.Exec(ctx, sql, status, updatedAt, id)
 	if err != nil {
 		return err
 	}

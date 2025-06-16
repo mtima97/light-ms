@@ -18,3 +18,9 @@ func successResponse(data any, message string) gin.H {
 		"data":    data,
 	}
 }
+
+func getUserId(ctx *gin.Context) int32 {
+	userId, _ := ctx.Get("userId")
+
+	return userId.(int32)
+}

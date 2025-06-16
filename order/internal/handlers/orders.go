@@ -26,7 +26,7 @@ func (h OrdersHandler) CreateOrder(ctx *gin.Context) {
 	}
 
 	dto := umodels.CreateOrderDto{
-		UserId: req.UserId,
+		UserId: getUserId(ctx),
 		Amount: req.Amount,
 	}
 
