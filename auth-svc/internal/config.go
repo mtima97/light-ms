@@ -3,8 +3,8 @@ package internal
 import "light-ms/pkg/common/config"
 
 type Config struct {
-	config.Svc
 	ServerPort string `env:"SERVER_PORT"`
+	JwtKey     string `env:"JWT_KEY"`
 }
 
 func LoadConf() Config {

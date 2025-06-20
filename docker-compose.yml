@@ -14,5 +14,14 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
+  orders:
+    build:
+      context: .
+      dockerfile: CommonDockerfile
+    container_name: orders
+    entrypoint: ["go", "run", "order/cmd/main.go"]
+    depends_on:
+      - db
+
 volumes:
   db-data:

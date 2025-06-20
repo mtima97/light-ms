@@ -34,7 +34,7 @@ func (r Router) Register(ucase usecase.OrdersUcase) {
 }
 
 func (r Router) Run() error {
-	if err := r.engine.SetTrustedProxies(r.conf.TrustedProxies); err != nil {
+	if err := r.engine.SetTrustedProxies(nil); err != nil {
 		return err
 	}
 
